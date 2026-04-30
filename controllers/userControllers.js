@@ -6,31 +6,33 @@ const { validationResult } =require("express-validator");
 
 // REGISTER
 exports.registerUser = async (req, res) => {
- try{   const errors = validationResult(req);
-if(!errors.isEmpty()){
-    return res.status(400).json({errors: errors.array() });
-}
+  try {
     const { name, age, email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
-        name,
-        age,
-        email,
-        password: hashedPassword
+      name,
+      age,
+      email,
+      password: hashedPassword
     });
 
     await user.save();
 
     res.json({ message: "User registered" });
-} catch (err) {
+
+  } catch (err) {
     console.log(err);
     res.status(500).json({
       error: "Something went wrong",
       details: err.message
     });
-}
+  }
 };
 
 // LOGIN
