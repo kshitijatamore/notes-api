@@ -13,9 +13,11 @@ if (!authHeader) {
 
     try {
         const verified = jwt.verify(token, "secretkey");
+         console.log("VERIFIED TOKEN:", verified);
         req.user = verified;
         next();
     } catch {
+        console.log("TOKEN ERROR:", err.message);
         res.status(400).json({ error: "Invalid token" });
     }
 };

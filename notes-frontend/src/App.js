@@ -57,7 +57,7 @@ const createNote = async () => {
       `${API}/notes`,
       {
         title: "My First Note",
-        content: "Hello from frontend"
+        content: "Hello Kshitija this side, this is my first note content"
       },
       {
         headers: {
