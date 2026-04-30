@@ -4,6 +4,7 @@ import axios from "axios";
 
 function App() {
 
+  const API = "https://notes-api-3wr3.onrender.com";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -11,7 +12,7 @@ function App() {
 
  const register = async () => {
   try {
-    const res = await axios.post("https://notes-api-3wr3.onrender.com/register", {
+    const res = await axios.post(`${API}/register`, {
       email,
       password,
       name: "test",
@@ -35,7 +36,7 @@ function App() {
 
 const login = async () => {
   try {
-    const res = await axios.post("https://notes-api-3wr3.onrender.com/login", {
+    const res = await axios.post(`${API}/login`, {
       email,
       password
     });
@@ -53,7 +54,7 @@ const login = async () => {
 const createNote = async () => {
   try {
     const res = await axios.post(
-      "https://notes-api-3wr3.onrender.com/notes",
+      `${API}/notes`,
       {
         title: "My First Note",
         content: "Hello from frontend"
@@ -77,7 +78,7 @@ const createNote = async () => {
 const getNotes = async () => {
   try {
     const res = await axios.get(
-      "https://notes-api-3wr3.onrender.com/notes",
+      `${API}/notes`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -97,7 +98,7 @@ const getNotes = async () => {
 const deleteNote = async (id) => {
   try {
     await axios.delete(
-      `https://notes-api-3wr3.onrender.com/notes/${id}`,
+      `${API}/notes/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
