@@ -17,6 +17,7 @@ const [error, setError] = useState("");
 const [search, setSearch] = useState("");
 const [dark, setDark] = useState(false);
 
+
 useEffect(() => {
   const savedToken = localStorage.getItem("token");
   if (savedToken) {
@@ -240,12 +241,10 @@ const updateNote = async () => {
 
             <br /><br />
 
-{token && <p>Logged in ✅</p>}
+{token ? <p>Logged in ✅</p> : <p>Please login to access your notes 🔐</p>}
 <br />
-            {(
+            {token &&(
   <div>
-    
-
     <button onClick={() => {
       setToken("");
       localStorage.removeItem("token");
@@ -254,7 +253,10 @@ const updateNote = async () => {
     </button>
   </div>
 )}
-               <br />
+     <br />
+     
+{token && (
+  <>
 
                 <button onClick={editId ? updateNote : createNote}
                  style={{
@@ -334,6 +336,9 @@ const updateNote = async () => {
                     </button>
                   </div>
                 ))}
+              </>
+)}
+
 
     </div>
     </div>
