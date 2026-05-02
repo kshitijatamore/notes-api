@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,  useEffect } from "react";
 import axios from "axios";
 
 
@@ -17,6 +17,13 @@ const [error, setError] = useState("");
 const [search, setSearch] = useState("");
 const [dark, setDark] = useState(false);
 
+useEffect(() => {
+  const savedToken = localStorage.getItem("token");
+  if (savedToken) {
+    setToken(savedToken);
+  }
+}, []);
+
  const register = async () => {
   try {
     const res = await axios.post(`${API}/register`, {
@@ -26,8 +33,8 @@ const [dark, setDark] = useState(false);
       age: 20
     });
 
-    console.log("SUCCESS RESPONSE:", res.data); // 👈 see backend response
-    alert(res.data.message || "Registered Successfully"); // ✅ FIX
+    console.log("SUCCESS RESPONSE:", res.data); 
+    alert(res.data.message || "Registered Successfully"); 
 
   } catch (err) {
     console.log("ERROR:", err.response?.data);
@@ -51,7 +58,8 @@ const login = async () => {
     alert("Login Success");
     console.log(res.data);
 
-    setToken(res.data.token); // 👈 store token
+    setToken(res.data.token); //  store token
+     localStorage.setItem("token", res.data.token);
 
   } catch (err) {
     alert(err?.response?.data?.error || "Login failed");
@@ -63,8 +71,8 @@ const createNote = async () => {
     await axios.post(
       `${API}/notes`,
       {
-        title: "My First Note",
-        content: "Hello Kshitija this side, this is my first note content"
+        title ,
+        content
       },
       {
         headers: {
@@ -148,9 +156,11 @@ const updateNote = async () => {
   color: dark ? "#fff" : "#000",
   minHeight: "100vh",
   padding: "20px"
+  
 }}>
+  <div style={{   maxWidth: "400px",
+    margin: "0 auto" }}>
       <h1>Notes App</h1>
-
       <input
   placeholder="Search..."
   onChange={(e) => setSearch(e.target.value)}
@@ -205,51 +215,127 @@ const updateNote = async () => {
   Toggle Dark Mode
 </button>
 <br /><br />
-      <button onClick={register}>Register</button>
+      <button onClick={register}
+       style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    marginRight: "10px",
+    background: "#007bff",
+    color: "#fff",
+    border: "none"
+  }}
+      >Register</button>
         &nbsp;&nbsp;
-          <button onClick={login}>Login</button>
+          <button onClick={login}
+            style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    background: "#007bff",
+    color: "#fff",
+    border: "none"
+  }}
+
+          
+          >Login</button>
 
             <br /><br />
 
-             <p>Token: { token }</p>
+{token && <p>Logged in ✅</p>}
+<br />
+            {(
+  <div>
+    
+
+    <button onClick={() => {
+      setToken("");
+      localStorage.removeItem("token");
+    }}>
+      Logout
+    </button>
+  </div>
+)}
                <br />
 
-                <button onClick={editId ? updateNote : createNote}>
-    {editId ? "Update Note" : "Create Note"}
+                <button onClick={editId ? updateNote : createNote}
+                 style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    marginRight: "10px",
+    background: "#28a745",
+    color: "#fff",
+    border: "none"
+  }}>
+      {editId ? "Update Note" : "Create Note"}
    </button>
-
-                <button onClick={getNotes}>Get Notes</button>
+          &nbsp;&nbsp;
+                <button onClick={getNotes}
+                 style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    background: "#17a2b8",
+    color: "#fff",
+    border: "none"
+  }}
+                >Get Notes</button>
                 {loading && <p>Loading...</p>}
 {error && <p style={{ color: "red" }}>{error}</p>}
                 <br /><br />
                 <h2>Your Notes:</h2>
+                {notes.length === 0 && <p>No notes yet. Create one!</p>}
                 {notes
   .filter(note =>
     note.title.toLowerCase().includes(search.toLowerCase()) ||
     note.content.toLowerCase().includes(search.toLowerCase())
   )
   .map(note => (
-                  <div key={note._id} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
+                  <div
+  key={note._id}
+  style={{
+    border: "1px solid #ccc",
+    padding: "15px",
+    borderRadius: "12px",
+    marginBottom: "15px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+  }}
+>
                     <h3>{note.title}</h3>
-                    <p>{note.content}</p>
+                    <p style={{ lineHeight: "1.5" }}>{note.content}</p>
                     <p style={{ fontSize: "12px", color: "gray" }}>
   {note.updatedAt
     ? new Date(note.updatedAt).toLocaleString()
     : ""}
 </p>
-                    <button onClick={() => deleteNote(note._id)}>
+                    <button onClick={() => deleteNote(note._id)}
+                        style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    marginRight: "10px",
+    cursor: "pointer",
+    background: "red",
+    color: "#fff",
+    border: "none"
+  }}>
                       Delete
                       </button>
+
                     <button onClick={() => {
                       setEditId(note._id);
                       setTitle(note.title);
                       setContent(note.content);
-                    }}>
+                    }}  style={{
+    padding: "8px 12px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    background: "#007bff",
+    color: "#fff",
+    border: "none"
+  }}>
                       Edit
                     </button>
                   </div>
                 ))}
 
+    </div>
     </div>
   );
 }
