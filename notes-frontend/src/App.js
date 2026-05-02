@@ -60,7 +60,7 @@ const login = async () => {
 
 const createNote = async () => {
   try {
-    const res = await axios.post(
+    await axios.post(
       `${API}/notes`,
       {
         title: "My First Note",
